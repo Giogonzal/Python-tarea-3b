@@ -1,0 +1,139 @@
+---
+title: "Tarea 3"
+author: "Geovanna Gonzalez"
+date: "2023-10-19"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Gráficos con matplolib
+
+La integración de Python en RStudio se logra mediante la instalación de paquetes como "reticulate", que facilita la ejecución de código Python en un entorno de RStudio. Esta combinación de lenguajes ofrece un entorno completo y versátil para proyectos de análisis de datos y científicos que requieren el uso de ambas plataformas.
+
+
+```{r}
+library(reticulate)
+```
+
+## Paquetes a utilizar
+
+El paquete **os** se usa para tareas como la navegación por el sistema de archivos, la creación de directorios, la verificación de la existencia de archivos y más.
+
+```{python}
+import os
+```
+
+El paquete **glob** se utiliza principalmente para buscar y listar archivos en un directorio que cumplan con ciertos criterios de nombre.
+
+```{python}
+import glob
+```
+
+**Pandas** se utiliza ampliamente para cargar, limpiar, transformar y analizar datos tabulares, como hojas de cálculo o conjuntos de datos en formato CSV o Excel.
+
+```{python}
+import pandas as pd
+```
+
+**NumPy** es esencial para la manipulación de datos numéricos, cálculos matemáticos y estadísticos, y es ampliamente utilizado en áreas como la ciencia de datos, la ingeniería y la investigación científica.
+
+```{python}
+import numpy as np
+```
+
+**Matplotlib** se utiliza para visualizar datos y resultados en forma de gráficos. Puede generar gráficos personalizados para explorar y comunicar información de manera efectiva.
+
+```{python}
+import matplotlib.pyplot as plt
+```
+
+Una vez importados los paquetes a utilizar, se puede acceder al url, empleando la función read_csv() para la lectura de un archivo que se encuentra alojado en una página web. En esta situación, simplemente se proporciona la dirección web entre comillas como parte de los parámetros de la función.
+
+```{python}
+
+# Cargar el archivo partidos_fifa_copa_mundial_procesado
+partidos_fifa_copa_mundial_procesado = pd.read_csv('https://raw.githubusercontent.com/cienciadedatos/datos-de-miercoles/master/datos/2019/2019-04-10/partidos.txt', delimiter='\t')
+
+```
+## Gráficos lineales desde data frames
+
+```{python}
+
+# Creamos una figura 
+fig = plt.figure()
+
+# Agregamos un eje 
+eje = fig.add_subplot(1, 1, 1)
+
+# Filtramos el DataFrame para obtener los datos de 'España' y 'Argentina'
+espana = partidos_fifa_copa_mundial_procesado[partidos_fifa_copa_mundial_procesado['equipo_1'] == 'España']
+argentina = partidos_fifa_copa_mundial_procesado[partidos_fifa_copa_mundial_procesado['equipo_1'] == 'Argentina']
+
+# Graficamos la evolución de los resultados de España
+eje.plot(espana['anio'], espana['equipo_1_final'], linestyle='-.', label='España')
+
+# Graficamos la evolución de los resultados de Argentina
+eje.plot(argentina['anio'], argentina['equipo_1_final'], linestyle='--', label='Argentina')
+
+# Etiquetamos los ejes
+eje.set_xlabel('Año')
+eje.set_ylabel('Resultado de España y Argentina')
+
+# Agregamos la leyenda
+eje.legend()
+plt.show()
+
+```
+
+Hasta la década de 1980, Argentina mantuvo consistentemente resultados más altos en el resultado final del equipo en partidos, destacándose en torneos de la Copa Mundial. Sin embargo, en las últimas décadas, la consistencia de Argentina ha fluctuado, mientras que España ha emergido como una potencia futbolística, ganando títulos importantes. Aunque ambos equipos tienen momentos de brillo, la gráfica muestra que Argentina ha enfrentado desafíos en mantener sus resultados, a veces igualando o incluso cayendo por debajo de España.
+
+### Guardar un gráfico
+
+Esta línea de código guarda el gráfico en un archivo con el nombre 'España Vs Argentina.png' en el directorio de trabajo actual donde **plt.savefig()** es una función de la biblioteca Matplotlib que se utiliza para guardar el gráfico actual en un archivo.
+
+```{python}
+#Guardar gráfico
+plt.savefig('España Vs Argentina.png')
+```
+
+
+```{python}
+# Inicializamos una figura
+fig = plt.figure()
+
+# Agregamos un primer eje (1 fila, 2 columnas, primer eje)
+eje1 = fig.add_subplot(1, 2, 1)
+
+# Graficamos los resultados finales del equipo 2 de España en el primer eje
+eje1.plot(espana['anio'], espana['equipo_2_final'], linestyle='-.', color='blue', label='España')
+
+# Agregamos etiquetas al primer eje
+eje1.set_xlabel('Año')
+eje1.set_ylabel('Resultado Final Equipo 2')
+
+# Agregamos un segundo eje (1 fila, 2 columnas, segundo eje), compartiendo el eje Y con el primero
+eje2 = fig.add_subplot(1, 2, 2, sharey=eje1)
+
+# Graficamos los resultados finales del equipo 2 de Argentina en el segundo eje
+eje2.plot(argentina['anio'], argentina['equipo_2_final'], linestyle='--', color='red', label='Argentina')
+
+# Agregamos etiquetas al segundo eje
+eje2.set_xlabel('Año')
+
+# Agregamos la leyenda a ambos ejes
+eje1.legend()
+eje2.legend()
+
+# Mostramos el gráfico
+plt.show()
+```
+A lo largo de los años desde 1980, hemos observado una tendencia interesante en los resultados del equipo 2 de España en comparación con los resultados del equipo 1. En la mayoría de los casos, el equipo 2 de España ha superado a Argentina en términos de resultados finales en los partidos de la Copa Mundial de la FIFA. Esta diferencia se ha vuelto más evidente en los últimos años.Mientras que los resultados del equipo 1 pueden variar, el equipo 2 de España ha logrado mantener un rendimiento más constante y a menudo ha superado a Argentina. Esto sugiere una mayor consistencia en el rendimiento del equipo 2 de España en comparación con el equipo 1 en el contexto de la Copa Mundial.
+
+Finalmente guardamos el gráfico:
+
+```{python}
+#Guardar gráfico
+plt.savefig('España Vs Argentina equipo 2.png')
+```
+
